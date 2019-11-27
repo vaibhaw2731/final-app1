@@ -1,0 +1,25 @@
+{
+  "generator-jhipster": {
+    "deploymentType": "kubernetes",
+    "gatewayType": "zuul",
+    "monitoring": "no",
+    "directoryPath": "../",
+    "appsFolders": [
+      "ui",
+      "organization",
+      "leave",
+      "meeting",
+      "notification"
+    ],
+    "clusteredDbApps": [],
+    "consoleOptions": [],
+    "serviceDiscoveryType": false,
+    "dockerRepositoryName": "gcr.io/payment-platform-204588",
+    "dockerPushCommand": "docker push",
+    "kubernetesNamespace": "final",
+    "kubernetesServiceType": "Ingress",
+    "ingressDomain": "35.188.51.172.nip.io",
+    "istio": true,
+    "jwtSecretKey": "ZWUxODFlZTY4YTIxODAzM2Q1ODZlZWVhMzc2MDA4MDFiNWIzNmI5YzczOWQ1ZDYwZTg0YzczN2FlYjBjMDRhNmRiODIwNWQ4MTc1ZTM4MTQxNWQ0ODhmMzkzOTkwNjQzYmE4Mg=="
+  }
+}
