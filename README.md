@@ -65,7 +65,7 @@ gcloud container clusters create final-cluster  --zone us-central1-a --num-nodes
 gcloud container clusters get-credentials final-cluster --zone us-central1-a
 ```
 
-### Configure Kubernetes Cluseter Engine
+### Configure Kubernetes Cluster Engine
 
 ```
 kubectl create clusterrolebinding cluster-admin-binding --clusterrole=cluster-admin --user="shagunbandi@gmail.com"
@@ -179,6 +179,28 @@ npm install -g generator-jhipster
 npm install -g yo ( Optional )
 ```
 
+### Install Google Chrome
+
+```
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
+sudo apt-get update 
+sudo apt-get install google-chrome-stable
+```
+
+### Install Chrome Driver
+
+```
+sudo apt-get update
+sudo apt-get install -y unzip xvfb libxi6 libgconf-2-4
+wget https://chromedriver.storage.googleapis.com/78.0.3904.70/chromedriver_linux64.zip
+unzip chromedriver_linux64.zip
+sudo mv chromedriver /usr/bin/chromedriver
+sudo chown root:root /usr/bin/chromedriver
+sudo chmod +x /usr/bin/chromedriver
+```
+
+
 ### Create Jhipster Application from jdl file
 
 ```
@@ -235,6 +257,270 @@ Add Docker Password Secret File
 	Credentials -> Add Credentials -> Secret Text (Kind) -> ID = DOCKER_CRED
 ```
 
+
+# Sonar-server instance
+
+## Setup
+
+### 1. Perform a system update
+
+```
+   - sudo apt-get update
+   - sudo apt-get -y upgrade
+```
+
+### 2. Install jdk
+
+```
+   - sudo apt-get install default-jdk
+```
+
+### 3. Install and configure PostgreSQL
+
+   - Install the PostgreSQL repository
+
+   ```
+       - sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+       - wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
+   ```
+
+   - Install the PostgreSQL database server by running
+
+   ```
+       - sudo apt-get -y install postgresql postgresql-contrib
+   ```
+
+   - Start PostgreSQL server and enable it to start automatically at boot time by running:
+
+   ```
+       - sudo systemctl start postgresql
+       - sudo systemctl enable postgresql
+   ```
+
+   - Change the password for the default PostgreSQL user.
+    
+    ```   
+       - sudo passwd postgres
+    ```
+
+   - Switch to the postgres user.
+    
+    ```
+       - su - postgres
+    ```
+
+   - Create a new user by typing:
+    
+    ```
+       - createuser sonar
+    ```
+
+   - Switch to the PostgreSQL shell.
+    
+    ```
+       - psql
+    ```
+
+   - Set a password for the newly created user for SonarQube database.
+    
+    ```
+       - ALTER USER sonar WITH ENCRYPTED password 'P@ssword';
+    ```
+
+   - Create a new database for PostgreSQL database by running:
+    
+    ```
+       - CREATE DATABASE sonar OWNER sonar;
+    ```
+
+   - Exit from the psql shell:
+    
+    ```
+       - \q
+    ```
+
+   - Switch back to the sudo user by running the exit command.
+    
+    ```
+       - exit
+    ```
+
+### 4. Download and configure SonarQube
+
+   - Download the SonarQube installer files archive.
+    
+    ```
+       - wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.3.zip
+    ```
+
+   - Install unzip by running:
+    
+    ```
+       - apt-get -y install unzip
+    ```
+
+   - Unzip the archive using the following command.
+    
+    ```
+       - sudo unzip sonarqube-7.3.zip -d /opt
+    ```
+
+   - Rename the directory:
+    
+    ```
+       - sudo mv /opt/sonarqube-7.3 /opt/sonarqube
+    ```
+
+   - Add a sonar user
+
+    ```
+       - adduser <name of user>    e.g; adduser sonaradmin
+    ```
+
+   - Add a password
+    
+    ```
+       - passwd
+    ```
+   - Assign permissions to sonar user(sonaradmin) for directory /opt/sonarqube
+       
+    ```
+       - sudo chown -R sonaradmin:sonaradmin /opt/sonarqube/
+    ```
+
+   - Open the SonarQube configuration file using any text editor.
+       
+    ```
+       - sudo nano /opt/sonarqube/conf/sonar.properties
+    ```
+
+   - Find the following lines
+    
+    ```
+         #sonar.jdbc.username=
+         #sonar.jdbc.password=
+    ```
+
+   - Uncomment and provide the PostgreSQL username and password of the database that we have created earlier. It should look like:
+    
+    ```
+         sonar.jdbc.username=sonar
+         sonar.jdbc.password=P@ssword
+    ```
+
+   - Find and uncomment the below line
+    
+    ```
+       - #sonar.jdbc.url=jdbc:postgresql://localhost/sonar
+    ```
+
+   - Finally, tell SonarQube to run in server mode :
+    
+    ```
+      - sonar.web.javaAdditionalOpts=-server
+    ```
+
+   - Uncomment these lines
+    
+    ```
+       - sonar.web.host=0.0.0.0     (By default, ports will be used on all IP addresses associated with the server)
+       - sonar.web.context=/sonar   (sonar-server will be accessed as http://ip:9000/sonar)
+       - sonar.web.port=9000        (deafault value is 9000)
+    ```
+
+   - save the file and exit from the editor
+
+
+### 5. Configure Systemd service
+
+   - SonarQube can be started directly using the startup script provided in the installer package. As a matter of convenience, 
+     we will setup a Systemd unit file for SonarQube.
+
+   - open sonar.service file
+
+    ```
+      - sudo nano /etc/systemd/system/sonar.service
+    ```
+
+   - Populate the file with:
+
+    ```
+     /*
+      [Unit]
+      Description=SonarQube service
+      After=syslog.target network.target
+
+      [Service]
+      Type=forking
+
+      ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+      ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+
+      User=sonaradmin   (sonar user which we created)
+      Group=sonaradmin
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+
+     */
+    ```
+
+    - Start the application by running:
+
+    ```
+       - sudo systemctl start sonar
+    ```
+
+    - Enable the SonarQube service to automatically start at boot time.
+    
+    ```
+       - sudo systemctl enable sonar
+    ```
+
+    - To check if the service is running, run:
+    
+    ```
+       - sudo systemctl status sonar
+    ```
+
+### 6. Accessing Sonarqube Server 
+
+    - http://server_domain_name:9000/sonar
+    
+
+### 7. Integrating sonarqube with Jenkins (Assumed Jenkins is up and running)
+    
+    - Install sonarqube scanner for jenkins
+    
+    ```
+      - Jenkins -> Manage Jenkins -> Manage Plugins -> Available -> search for SonarQube Scanner for Jenkins and install it
+    ```
+
+    - Configuring Jenkins to connect with sonar server
+    
+    ```
+      - Jenkins -> Manage Jenkins -> Configure System -> Sonarque servers
+         -> Name:       sonarqube-server
+         -> Server Url: http://server_domain_name:9000/sonar/projects
+         -> Server authentication token:
+              -> For server authentication token, login as admin in sonarqube server(user:admin && password:admin) and generate a server-token
+                 by clicking on security. Copy that token and save as secret text in your jenkins credentials.
+    ```
+
+    - Configuring Sonarqube scanner installations:
+    
+    ```
+       - Jenkins -> Manage Jenkins -> Global Tool Configuration -> Sonarqube Scanner  (Install sonarqube in /opt/sonarqube on sonar-instance)
+          -> Name: sonar-scanner-4.2.0.1873 -linux (name of sonar scanner u downloaded)
+          -> SONAR_RUNNER_HOME: /opt/sonarqube/
+    ```
+
+
+
+
+
+
 # Links
 
 ###### Please find the below useful endpoints
@@ -285,7 +571,7 @@ kubectl delete pods <pod-name> -n <namespace>
 
 # Jenkins Pipeline
 
-##### Changes in Depployment Files
+##### Changes in Deployment Files
 
 ###### add parameter 
 ```
@@ -293,53 +579,30 @@ spec > strategy > type: Recreate
 spec > template > containers > imagePullPolicy: Always
 ```
 
-##### This is the pipeline script. change the url, DOCKER_CRED, Docker Username, tagname, project name accordingly.
+# For running protractor cases
 
-	pipeline {
-	    agent any
+### Change in protractor conf file
 
-	    environment {
-		GIT_URL = "https://github.com/manvinirwal/final-jhipster"
-		DOCKER_BASE = "shagunbandi"
-		BRIDGE = "bridge"
-		CLUSTER_NAME = "final-cluster"
-		PROJECT_ID = "payment-platform-204588"
-		NAMESPACE = "avengers"
-		COMMIT_ID = find_commit_id()
-	    }
-	    stages {
+From the base project directory
+```
+cd ui\src\test\javascript
+```
 
-		stage("Git clone"){
-		    steps {
-			git credentialsId: 'GIT_CRED_MANVI', url: "${GIT_URL}"
-		    }
-		}
+Open **protractor.conf.js** file
 
-		stage("Maven Clean, Build, Docker Push for UI"){
-		    agent { label 'master' }
-		    steps{
-			withCredentials([string(credentialsId: 'DOCKER_CRED', variable: 'DOCKER_CRED')]) {
-			    sh "docker login -u ${DOCKER_BASE} -p ${DOCKER_CRED}"
-			}
-			sh "cd ui && ./mvnw -ntp -Pprod verify jib:build -Djib.to.image=${DOCKER_BASE}/ui:${env.COMMIT_ID} && cd .."
-			sh 'cd ui && npm run e2e && cd..'
-		    }
-		}
+Under **capabilities** change it to
 
-		stage("Deploy"){
-		    agent { label 'master' }
-		    steps {
-			sh "gcloud container clusters get-credentials ${CLUSTER_NAME} --zone us-central1-a --project ${PROJECT_ID}"
-			sh "cd kubernetes && sh kubectl-apply.sh && cd .."
-			sh "kubectl set image deployment.v1.apps/ui ui-app=${DOCKER_BASE}/ui:${env.COMMIT_ID} -n=${NAMESPACE}"
-		    }
-		}
-	    }
-	}
+```
+	browserName: 'chrome',
+    chromeOptions: {
+		binary: <google-chrome-stable location>,   (In our case, "/usr/bin/google-chrome-stable") 
+        args:[ '--headless', '--disable-gpu', '--window-size=800,600', '--disable-gpu', '--window-size=800,600','--no-sandbox','--disable-dev-shm-usage' ]
+    }
+```
 
-	def find_commit_id() {
-	    node('master') {
-		sh "git rev-parse HEAD > .git/commit-id"
-		return readFile('.git/commit-id').trim() 
-	    }
-	}
+In **base url** url mention the url of your application
+
+```
+<app-name>.<namespace>.<ingress-ip>.nip.io (In our case 'http://ui.shagun.35.188.51.171.nip.io/')
+```
+
