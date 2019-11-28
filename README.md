@@ -312,37 +312,37 @@ Add Docker Password Secret File
    - Create a new user by typing
     
    ```
-       - createuser sonar
+     createuser sonar
    ```
 
    - Switch to the PostgreSQL shell
     
    ```
-       - psql
+       psql
    ```
 
    - Set a password for the newly created user for SonarQube database
     
    ```
-       - ALTER USER sonar WITH ENCRYPTED password 'P@ssword';
+        ALTER USER sonar WITH ENCRYPTED password 'P@ssword';
    ```
 
    - Create a new database for PostgreSQL database by running
     
    ```
-       - CREATE DATABASE sonar OWNER sonar;
+        CREATE DATABASE sonar OWNER sonar;
    ```
 
    - Exit from the psql shell
     
    ```
-       - \q
+        \q
    ```
 
    - Switch back to the sudo user by running the exit command
     
    ```
-       - exit
+        exit
    ```
 
 ### 4. Download and configure SonarQube
@@ -350,48 +350,48 @@ Add Docker Password Secret File
    - Download the SonarQube installer files archive
     
    ```
-       - wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.3.zip
+        wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.3.zip
    ```
 
    - Install unzip by running
     
    ```
-       - apt-get -y install unzip
+        apt-get -y install unzip
    ```
 
    - Unzip the archive using the following command
     
    ```
-       - sudo unzip sonarqube-7.3.zip -d /opt
+        sudo unzip sonarqube-7.3.zip -d /opt
    ```
 
    - Rename the directory
     
    ```
-       - sudo mv /opt/sonarqube-7.3 /opt/sonarqube
+        sudo mv /opt/sonarqube-7.3 /opt/sonarqube
    ```
 
    - Add a sonar user
 
    ```
-       - adduser <name of user>    e.g; adduser sonaradmin
+        adduser <name of user>    e.g; adduser sonaradmin
    ```
 
    - Add a password
     
    ```
-       - passwd
+        passwd
    ```
    - Assign permissions to sonar user(sonaradmin) for directory /opt/sonarqube
        
    ```
-       - sudo chown -R sonaradmin:sonaradmin /opt/sonarqube/
+        sudo chown -R sonaradmin:sonaradmin /opt/sonarqube/
    ```
 
    - Open the SonarQube configuration file using any text editor
        
    ```
-       - sudo nano /opt/sonarqube/conf/sonar.properties
+        sudo nano /opt/sonarqube/conf/sonar.properties
    ```
 
    - Find the following lines
@@ -411,21 +411,21 @@ Add Docker Password Secret File
    - Find and uncomment the below line
     
    ```
-       - #sonar.jdbc.url=jdbc:postgresql://localhost/sonar
+        #sonar.jdbc.url=jdbc:postgresql://localhost/sonar
    ```
 
    - Finally, tell SonarQube to run in server mode
     
    ```
-      - sonar.web.javaAdditionalOpts=-server
+       sonar.web.javaAdditionalOpts=-server
    ```
 
    - Uncomment these lines
     
    ```
-       - sonar.web.host=0.0.0.0     (By default, ports will be used on all IP addresses associated with the server)
-       - sonar.web.context=/sonar   (sonar-server will be accessed as http://ip:9000/sonar)
-       - sonar.web.port=9000        (deafault value is 9000)
+        sonar.web.host=0.0.0.0     (By default, ports will be used on all IP addresses associated with the server)
+        sonar.web.context=/sonar   (sonar-server will be accessed as http://ip:9000/sonar)
+        sonar.web.port=9000        (deafault value is 9000)
    ```
 
    - save the file and exit from the editor
@@ -439,7 +439,7 @@ Add Docker Password Secret File
    - open sonar.service file
 
    ```
-      - sudo nano /etc/systemd/system/sonar.service
+       sudo nano /etc/systemd/system/sonar.service
    ```
 
    - Populate the file with
@@ -467,19 +467,19 @@ Add Docker Password Secret File
     - Start the application by running
 
    ```
-       - sudo systemctl start sonar
+        sudo systemctl start sonar
    ```
 
     - Enable the SonarQube service to automatically start at boot time
     
    ```
-       - sudo systemctl enable sonar
+        sudo systemctl enable sonar
    ```
 
     - To check if the service is running, run
     
    ```
-       - sudo systemctl status sonar
+        sudo systemctl status sonar
    ```
 
 ### 6. Accessing Sonarqube Server 
@@ -492,13 +492,13 @@ Add Docker Password Secret File
     - Install sonarqube scanner for jenkins
     
    ```
-      - Jenkins -> Manage Jenkins -> Manage Plugins -> Available -> search for SonarQube Scanner for Jenkins and install it
+       Jenkins -> Manage Jenkins -> Manage Plugins -> Available -> search for SonarQube Scanner for Jenkins and install it
    ```
 
     - Configuring Jenkins to connect with sonar server
     
    ```
-      - Jenkins -> Manage Jenkins -> Configure System -> Sonarque servers
+       Jenkins -> Manage Jenkins -> Configure System -> Sonarque servers
          -> Name:       sonarqube-server
          -> Server Url: http://server_domain_name:9000/sonar/projects
          -> Server authentication token:
@@ -509,7 +509,7 @@ Add Docker Password Secret File
     - Configuring Sonarqube scanner installations
     
    ```
-       - Jenkins -> Manage Jenkins -> Global Tool Configuration -> Sonarqube Scanner  (Install sonarqube in /opt/sonarqube on sonar-instance)
+        Jenkins -> Manage Jenkins -> Global Tool Configuration -> Sonarqube Scanner  (Install sonarqube in /opt/sonarqube on sonar-instance)
           -> Name: sonar-scanner-4.2.0.1873 -linux (name of sonar scanner u downloaded)
           -> SONAR_RUNNER_HOME: /opt/sonarqube/
    ```
