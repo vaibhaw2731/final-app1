@@ -299,9 +299,8 @@ Add Docker Password Secret File
 
    - Change the password for the default PostgreSQL use
    
-    ```
     	sudo passwd postgres
-    ```
+    
     
    - Switch to the postgres user
     
