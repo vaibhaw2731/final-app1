@@ -628,19 +628,19 @@ mochaOpts: {
 ```
 #### 3. To uplaod report on google storage
 
--To enable cloud storage and Google cloud storage json APIs
+   -To enable cloud storage and Google cloud storage json APIs
 
 ```
 Navigation menu->API & services-> libray->search for APIs->enable
 ```
 
--To create credential so that u can acces ur cloud resouces in jenkins pipeline
+   -To create credential so that u can acces ur cloud resouces in jenkins pipeline
 
 ```
 Navigation menu->API & services->credentials->create credential->service account key->select compute engine default service account->choose json format->create
 ```
 
--To create bucket
+   -To create bucket
 
 ```
 Storage ->create bucket->give unique name to ur bucket->save
@@ -650,13 +650,13 @@ Storage ->create bucket->give unique name to ur bucket->save
 
 ##### To update jackson2-api plgugin to 2.10.1-rc98.daee086b15cf version or greater than 2.10.0
 
--download plugin upi file from the given link:https://mvnrepository.com/artifact/org.jenkins-ci.plugins/jackson2-api/2.10.1-rc98.daee086b15cf
--Go to Manage Jenkins->Manage Plugins-> Advanced -> upload upi file->restart jenkins
+   -download plugin upi file from the given link:https://mvnrepository.com/artifact/org.jenkins-ci.plugins/jackson2-api/2.10.1-rc98.daee086b15cf
+   -Go to Manage Jenkins->Manage Plugins-> Advanced -> upload upi file->restart jenkins
       ->Install Google Cloud Storage plugin in jenkins
 
 #### 5. To upload report to bucket
 
--Write following code in jenkinfile after stages block
+   -Write following code in jenkinfile after stages block
 
 ```
 post {
