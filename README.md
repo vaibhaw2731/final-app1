@@ -604,3 +604,71 @@ In **base url** mention the url of your application
 <app-name>.<namespace>.<ingress-ip>.nip.io (In our case 'http://ui.shagun.35.188.51.171.nip.io/')
 ```
 
+### To generate and upload protractor reports on google storage.
+
+#### 1. Install mochawesome reporter inside your react project repository
+
+```
+npm install --save-dev mocha mochawesome mochawesome-merge mochawesome-report-generator
+```
+
+#### 2. Add mocha reporter configuartion to your protrcator.conf.js file
+
+```
+cd 
+mochaOpts: {
+		     reporter: "mochawesome",
+		     reporterOptions: {
+		       reportDir: "mocha/reports",
+		       overwrite: true,
+		       html: true,
+		       json: true
+		    }
+       }
+```
+#### 3. To uplaod report on google storage
+
+-To enable cloud storage and Google cloud storage json APIs
+
+```
+Navigation menu->API & services-> libray->search for APIs->enable
+```
+
+-To create credential so that u can acces ur cloud resouces in jenkins pipeline
+
+```
+Navigation menu->API & services->credentials->create credential->service account key->select compute engine default service account->choose json format->create
+```
+
+-To create bucket
+
+```
+Storage ->create bucket->give unique name to ur bucket->save
+```
+
+#### 4. To configure ur jenkins server
+
+##### To update jackson2-api plgugin to 2.10.1-rc98.daee086b15cf version or greater than 2.10.0
+
+-download plugin upi file from the given link:https://mvnrepository.com/artifact/org.jenkins-ci.plugins/jackson2-api/2.10.1-rc98.daee086b15cf
+-Go to Manage Jenkins->Manage Plugins-> Advanced -> upload upi file->restart jenkins
+      ->Install Google Cloud Storage plugin in jenkins
+
+#### 5. To upload report to bucket
+
+-Write following code in jenkinfile after stages block
+
+```
+post {
+	        always {
+			          script {
+			            googleStorageUpload bucket: 'gs://protractor_test_reports', credentialsId: 'PROTRACTOR_TEST_STORAGE', pattern: 'ui/mocha/reports/mochawesome.json'
+
+			            // googleStorageUpload bucket: 'gs://protractor_test_reports', credentialsId: 'PROTRACTOR_TEST_STORAGE', pattern: 'ui/mocha/reports/mochawesome.html'
+
+			          }
+	        }
+    	}
+```
+
+
