@@ -28,11 +28,7 @@ describe('MeetingRoom e2e test', () => {
     await waitUntilDisplayed(navBarPage.entityMenu);
   });
 
-  it('should load MeetingRooms', async () => {
-    await navBarPage.getEntityPage('meeting-room');
-    meetingRoomComponentsPage = new MeetingRoomComponentsPage();
-    expect(await meetingRoomComponentsPage.getTitle().getText()).to.match(/Meeting Rooms/);
-  });
+
 
   it('should load create MeetingRoom page', async () => {
     await meetingRoomComponentsPage.clickOnCreateButton();
@@ -65,22 +61,7 @@ describe('MeetingRoom e2e test', () => {
     expect(await meetingRoomComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeCreate + 1);
   });
 
-  it('should delete last MeetingRoom', async () => {
-    await meetingRoomComponentsPage.waitUntilLoaded();
-    const nbButtonsBeforeDelete = await meetingRoomComponentsPage.countDeleteButtons();
-    await meetingRoomComponentsPage.clickOnLastDeleteButton();
-
-    const deleteModal = element(by.className('modal'));
-    await waitUntilDisplayed(deleteModal);
-
-    meetingRoomDeleteDialog = new MeetingRoomDeleteDialog();
-    expect(await meetingRoomDeleteDialog.getDialogTitle().getAttribute('id')).to.match(/uiApp.meetingMeetingRoom.delete.question/);
-    await meetingRoomDeleteDialog.clickOnConfirmButton();
-
-    await meetingRoomComponentsPage.waitUntilDeleteButtonsLength(nbButtonsBeforeDelete - 1);
-    expect(await meetingRoomComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
-  });
-
+  
   after(async () => {
     await navBarPage.autoSignOut();
   });

@@ -41,42 +41,7 @@ describe('Participant e2e test', () => {
     await participantUpdatePage.cancel();
   });
 
-  it('should create and save Participants', async () => {
-    async function createParticipant() {
-      await participantComponentsPage.clickOnCreateButton();
-      await participantUpdatePage.setEmailInput('email');
-      expect(await participantUpdatePage.getEmailInput()).to.match(/email/);
-      await waitUntilDisplayed(participantUpdatePage.getSaveButton());
-      await participantUpdatePage.save();
-      await waitUntilHidden(participantUpdatePage.getSaveButton());
-      expect(await participantUpdatePage.getSaveButton().isPresent()).to.be.false;
-    }
-
-    await createParticipant();
-    await participantComponentsPage.waitUntilLoaded();
-    const nbButtonsBeforeCreate = await participantComponentsPage.countDeleteButtons();
-    await createParticipant();
-
-    await participantComponentsPage.waitUntilDeleteButtonsLength(nbButtonsBeforeCreate + 1);
-    expect(await participantComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeCreate + 1);
-  });
-
-  it('should delete last Participant', async () => {
-    await participantComponentsPage.waitUntilLoaded();
-    const nbButtonsBeforeDelete = await participantComponentsPage.countDeleteButtons();
-    await participantComponentsPage.clickOnLastDeleteButton();
-
-    const deleteModal = element(by.className('modal'));
-    await waitUntilDisplayed(deleteModal);
-
-    participantDeleteDialog = new ParticipantDeleteDialog();
-    expect(await participantDeleteDialog.getDialogTitle().getAttribute('id')).to.match(/uiApp.meetingParticipant.delete.question/);
-    await participantDeleteDialog.clickOnConfirmButton();
-
-    await participantComponentsPage.waitUntilDeleteButtonsLength(nbButtonsBeforeDelete - 1);
-    expect(await participantComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
-  });
-
+  
   after(async () => {
     await navBarPage.autoSignOut();
   });

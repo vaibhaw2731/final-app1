@@ -220,63 +220,7 @@ describe('Account', () => {
 
     expect(await signInPage.isHidden()()).to.be.true;
   });
-
-  it('should be able to change user_test settings', async () => {
-    await waitUntilDisplayed(navBarPage.accountMenu);
-
-    settingsPage = await navBarPage.getSettingsPage();
-    expect(await settingsPage.getTitle()).to.eq(settingsPageTitle);
-
-    await settingsPage.firstName.sendKeys('jhipster');
-    await settingsPage.lastName.sendKeys('retspihj');
-    await settingsPage.saveButton.click();
-
-    const toast = getToastByInnerText('Settings saved!');
-    await waitUntilDisplayed(toast);
-
-    // Success toast should appear
-    expect(await toast.isPresent()).to.be.true;
-    await navBarPage.autoSignOut();
-  });
-
-  it('should login with admin account', async () => {
-    await signInPage.get();
-    expect(await signInPage.getTitle()).to.eq(loginPageTitle);
-
-    await signInPage.username.sendKeys('admin');
-    await signInPage.password.sendKeys('admin');
-    await signInPage.loginButton.click();
-    await signInPage.waitUntilHidden();
-
-    expect(await signInPage.isHidden()()).to.be.true;
-  });
-
-  it('should not be able to change admin settings if email already exists', async () => {
-    await settingsPage.get();
-    expect(await settingsPage.getTitle()).to.eq(settingsPageTitle);
-
-    await settingsPage.setEmail('.jh');
-    await settingsPage.save();
-
-    const toast = getToastByInnerText('Email is already in use!');
-    await waitUntilDisplayed(toast);
-
-    // Error toast should appear
-    expect(await toast.isPresent()).to.be.true;
-  });
-
-  it('should delete previously created fake user', async () => {
-    await browser.get('/admin/user-management/user_test/delete');
-    const deleteModal = element(by.className('modal'));
-    await waitUntilDisplayed(deleteModal);
-
-    await element(by.buttonText('Delete')).click();
-    await waitUntilHidden(deleteModal);
-
-    // Delete modal should disappear
-    expect(await deleteModal.isPresent()).to.be.false;
-  });
-
+  
   after(async () => {
     await navBarPage.autoSignOut();
   });

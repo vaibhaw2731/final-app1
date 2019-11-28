@@ -41,43 +41,6 @@ describe('Department e2e test', () => {
     await departmentUpdatePage.cancel();
   });
 
-  it('should create and save Departments', async () => {
-    async function createDepartment() {
-      await departmentComponentsPage.clickOnCreateButton();
-      await departmentUpdatePage.setCodeInput('code');
-      expect(await departmentUpdatePage.getCodeInput()).to.match(/code/);
-      await departmentUpdatePage.setNameInput('name');
-      expect(await departmentUpdatePage.getNameInput()).to.match(/name/);
-      await waitUntilDisplayed(departmentUpdatePage.getSaveButton());
-      await departmentUpdatePage.save();
-      await waitUntilHidden(departmentUpdatePage.getSaveButton());
-      expect(await departmentUpdatePage.getSaveButton().isPresent()).to.be.false;
-    }
-
-    await createDepartment();
-    await departmentComponentsPage.waitUntilLoaded();
-    const nbButtonsBeforeCreate = await departmentComponentsPage.countDeleteButtons();
-    await createDepartment();
-
-    await departmentComponentsPage.waitUntilDeleteButtonsLength(nbButtonsBeforeCreate + 1);
-    expect(await departmentComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeCreate + 1);
-  });
-
-  it('should delete last Department', async () => {
-    await departmentComponentsPage.waitUntilLoaded();
-    const nbButtonsBeforeDelete = await departmentComponentsPage.countDeleteButtons();
-    await departmentComponentsPage.clickOnLastDeleteButton();
-
-    const deleteModal = element(by.className('modal'));
-    await waitUntilDisplayed(deleteModal);
-
-    departmentDeleteDialog = new DepartmentDeleteDialog();
-    expect(await departmentDeleteDialog.getDialogTitle().getAttribute('id')).to.match(/uiApp.organizationDepartment.delete.question/);
-    await departmentDeleteDialog.clickOnConfirmButton();
-
-    await departmentComponentsPage.waitUntilDeleteButtonsLength(nbButtonsBeforeDelete - 1);
-    expect(await departmentComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
-  });
 
   after(async () => {
     await navBarPage.autoSignOut();
