@@ -443,7 +443,7 @@ Add Docker Password Secret File
    ```
 
    - Populate the file with
-
+   
    ```
       [Unit]
       Description=SonarQube service
@@ -464,19 +464,19 @@ Add Docker Password Secret File
 
    ```
 
-    - Start the application by running
+   - Start the application by running
 
    ```
         sudo systemctl start sonar
    ```
 
-    - Enable the SonarQube service to automatically start at boot time
+   - Enable the SonarQube service to automatically start at boot time
     
    ```
         sudo systemctl enable sonar
    ```
 
-    - To check if the service is running, run
+   - To check if the service is running, run
     
    ```
         sudo systemctl status sonar
@@ -484,18 +484,18 @@ Add Docker Password Secret File
 
 ### 6. Accessing Sonarqube Server 
 
-    - http://server_domain_name:9000/sonar
+   - http://server_domain_name:9000/sonar
     
 
 ### 7. Integrating sonarqube with Jenkins (Assumed Jenkins is up and running)
     
-    - Install sonarqube scanner for jenkins
+   - Install sonarqube scanner for jenkins
     
    ```
        Jenkins -> Manage Jenkins -> Manage Plugins -> Available -> search for SonarQube Scanner for Jenkins and install it
    ```
 
-    - Configuring Jenkins to connect with sonar server
+   - Configuring Jenkins to connect with sonar server
     
    ```
        Jenkins -> Manage Jenkins -> Configure System -> Sonarque servers
@@ -506,13 +506,18 @@ Add Docker Password Secret File
                  by clicking on security. Copy that token and save as secret text in your jenkins credentials.
    ```
 
-    - Configuring Sonarqube scanner installations
+   - Configuring Sonarqube scanner installations
     
    ```
         Jenkins -> Manage Jenkins -> Global Tool Configuration -> Sonarqube Scanner  (Install sonarqube in /opt/sonarqube on sonar-instance)
           -> Name: sonar-scanner-4.2.0.1873 -linux (name of sonar scanner u downloaded)
           -> SONAR_RUNNER_HOME: /opt/sonarqube/
    ```
+
+### 8. Dowmload XML plugin in sonarqube server to print Xml report as well
+
+   - Login as admin on sonarqube server -> Administration -> Market Place -> Available
+   - Install Jacoco(JaCoCo XML report importer)
 
 # Links
 
