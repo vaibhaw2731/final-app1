@@ -302,7 +302,7 @@ Add Docker Password Secret File
     ```
     	sudo passwd postgres
     ```
-
+    
    - Switch to the postgres user
     
     ```
