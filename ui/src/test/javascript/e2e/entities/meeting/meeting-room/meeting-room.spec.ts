@@ -30,36 +30,6 @@ describe('MeetingRoom e2e test', () => {
 
 
 
-  it('should load create MeetingRoom page', async () => {
-    await meetingRoomComponentsPage.clickOnCreateButton();
-    meetingRoomUpdatePage = new MeetingRoomUpdatePage();
-    expect(await meetingRoomUpdatePage.getPageTitle().getAttribute('id')).to.match(/uiApp.meetingMeetingRoom.home.createOrEditLabel/);
-    await meetingRoomUpdatePage.cancel();
-  });
-
-  it('should create and save MeetingRooms', async () => {
-    async function createMeetingRoom() {
-      await meetingRoomComponentsPage.clickOnCreateButton();
-      await meetingRoomUpdatePage.setCodeInput('code');
-      expect(await meetingRoomUpdatePage.getCodeInput()).to.match(/code/);
-      await meetingRoomUpdatePage.setLocationInput('location');
-      expect(await meetingRoomUpdatePage.getLocationInput()).to.match(/location/);
-      await meetingRoomUpdatePage.setNameInput('name');
-      expect(await meetingRoomUpdatePage.getNameInput()).to.match(/name/);
-      await waitUntilDisplayed(meetingRoomUpdatePage.getSaveButton());
-      await meetingRoomUpdatePage.save();
-      await waitUntilHidden(meetingRoomUpdatePage.getSaveButton());
-      expect(await meetingRoomUpdatePage.getSaveButton().isPresent()).to.be.false;
-    }
-
-    await createMeetingRoom();
-    await meetingRoomComponentsPage.waitUntilLoaded();
-    const nbButtonsBeforeCreate = await meetingRoomComponentsPage.countDeleteButtons();
-    await createMeetingRoom();
-
-    await meetingRoomComponentsPage.waitUntilDeleteButtonsLength(nbButtonsBeforeCreate + 1);
-    expect(await meetingRoomComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeCreate + 1);
-  });
 
   
   after(async () => {

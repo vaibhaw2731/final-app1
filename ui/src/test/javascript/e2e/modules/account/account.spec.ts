@@ -63,21 +63,7 @@ describe('Account', () => {
     await navBarPage.autoSignOut();
   });
 
-  it('should be able to sign up', async () => {
-    await waitUntilDisplayed(navBarPage.accountMenu);
-
-    registerPage = await navBarPage.getRegisterPage();
-    await registerPage.waitUntilDisplayed();
-    expect(await registerPage.getTitle()).to.eq(registerPageTitle);
-
-    await registerPage.autoSignUpUsing('user_test', 'admin@localhost.jh', 'user_test');
-    const toast = getToastByInnerText('Registration saved! Please check your email for confirmation.');
-    await waitUntilDisplayed(toast);
-
-    // Success toast should appear
-    expect(await toast.isPresent()).to.be.true;
-  });
-
+  
   it('should load user management', async () => {
     await signInPage.get();
     expect(await signInPage.getTitle()).to.eq(loginPageTitle);
@@ -96,23 +82,7 @@ describe('Account', () => {
     expect(await title.isPresent()).to.be.true;
   });
 
-  it('should activate the new registered user', async () => {
-    expect(await element(by.id('user-management-page-heading')).isPresent()).to.be.true;
-
-    const modifiedDateSortButton = getModifiedDateSortButton();
-    await waitUntilClickable(modifiedDateSortButton);
-    await modifiedDateSortButton.click();
-
-    const deactivatedButton = getUserDeactivatedButtonByLogin('user_test');
-    await waitUntilClickable(deactivatedButton);
-    await deactivatedButton.click();
-    await waitUntilHidden(deactivatedButton);
-
-    // Deactivated button should disappear
-    expect(await deactivatedButton.isPresent()).to.be.false;
-    await navBarPage.autoSignOut();
-  });
-
+  
   it('should not be able to sign up if login already taken', async () => {
     await registerPage.get();
     expect(await registerPage.getTitle()).to.eq(registerPageTitle);
@@ -137,31 +107,7 @@ describe('Account', () => {
     expect(await toast.isPresent()).to.be.true;
   });
 
-  it('should be able to log in with new registered account', async () => {
-    await signInPage.get();
-    expect(await signInPage.getTitle()).to.eq(loginPageTitle);
-
-    await signInPage.username.sendKeys('user_test');
-    await signInPage.password.sendKeys('user_test');
-    await signInPage.loginButton.click();
-    await signInPage.waitUntilHidden();
-
-    // Login page should close when login success
-    expect(await signInPage.isHidden()()).to.be.true;
-    await navBarPage.autoSignOut();
-  });
-
-  it('should login with admin account', async () => {
-    await signInPage.get();
-    expect(await signInPage.getTitle()).to.eq(loginPageTitle);
-
-    await signInPage.username.sendKeys('admin');
-    await signInPage.password.sendKeys('admin');
-    await signInPage.loginButton.click();
-    await signInPage.waitUntilHidden();
-
-    expect(await signInPage.isHidden()()).to.be.true;
-  });
+  
 
   it('should fail to update password when using incorrect current password', async () => {
     passwordPage = await navBarPage.getPasswordPage();
