@@ -297,10 +297,10 @@ Add Docker Password Secret File
        sudo systemctl enable postgresql
    ```
 
-   - Change the password for the default PostgreSQL user
-    
+   - Change the password for the default PostgreSQL use
+   
     ```
-       sudo passwd postgres
+    	sudo passwd postgres
     ```
 
    - Switch to the postgres user
