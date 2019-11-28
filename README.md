@@ -277,14 +277,14 @@ Add Docker Password Secret File
 
 ### 3. Install and configure PostgreSQL
 
-   - Install the PostgreSQL repository
+   - Install the PostgreSQL repository-
 
    ```
        - sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
        - wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
    ```
 
-   - Install the PostgreSQL database server by running
+   - Install the PostgreSQL database server by running-
 
    ```
        - sudo apt-get -y install postgresql postgresql-contrib
