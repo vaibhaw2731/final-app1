@@ -374,13 +374,13 @@ Add Docker Password Secret File
    - Add a sonar user
 
    ```
-        adduser <name of user>    e.g; adduser sonaradmin
+        sudo useradd <name of user>    e.g; useradd sonaradmin
    ```
 
    - Add a password
     
    ```
-        passwd
+        passwd sonaradmin
    ```
    - Assign permissions to sonar user(sonaradmin) for directory /opt/sonarqube
        
