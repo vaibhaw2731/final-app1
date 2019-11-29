@@ -653,6 +653,9 @@ Storage ->create bucket->give unique name to ur bucket->save
    - download plugin upi file from the given link:https://mvnrepository.com/artifact/org.jenkins-ci.plugins/jackson2-api/2.10.1-rc98.daee086b15cf
    - Go to Manage Jenkins->Manage Plugins-> Advanced -> upload upi file->restart jenkins
       ->Install Google Cloud Storage plugin in jenkins
+  
+ ##### To add credential(json file downloaded from google cloud in previous steps) in jenkins 
+   - Go to Credentials->add credentials->select Google Service Account from private key ->give unique credential_id in project name->upload json file->save
 
 #### 5. To upload report to bucket
 
