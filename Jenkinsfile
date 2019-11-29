@@ -82,6 +82,12 @@ pipeline {
                     sh 'cd ui && npm run e2e && cd ..'
              }
         }
+        stage('Gatling test'){
+            steps{
+                sh "cd ui && mvn clean gatling:test"
+                gatlingArchive()
+            }
+        }
     }
     post {
         always {
