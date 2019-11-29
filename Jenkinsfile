@@ -8,7 +8,7 @@ pipeline {
       CLUSTER_NAME = "final-cluster"
       DOCKER_BASE = "gcr.io"
       CLUSTER_ZONE = "us-central1-a"
-      SONAR_URL = "http://35.222.169.94:9000/sonar"
+      SONAR_URL = "http://34.67.108.137:9000/sonar"
       OLD_INGRESS_IP = "35.188.51.172"
       OLD_BASE_URL = "ui.shagun.35.188.51.171.nip.io"
       NEW_INGRESS_IP = "34.67.38.135"
