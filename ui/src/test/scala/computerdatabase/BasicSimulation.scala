@@ -69,5 +69,5 @@ class BasicSimulation extends Simulation {
       .get("/"))
     .pause(2)
     
-  setUp(scn.inject(atOnceUsers(1000)).protocols(httpProtocol))
+  setUp(scn.inject(atOnceUsers(100)).protocols(httpProtocol))
 }
